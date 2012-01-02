@@ -4,6 +4,14 @@
 ##########
 
  A (really really) simple image-to-ascii converter written in python and PIL.
+
+
+###########
+#  STUFF ##
+###########
+
+- Python 2.7.1+
+- PIL 1.1.7+
  
 
 ##########
