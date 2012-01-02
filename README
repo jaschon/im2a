@@ -1,0 +1,17 @@
+
+##########
+#  im2a ##
+##########
+
+ A (really really) simple image-to-ascii converter written in python and PIL.
+ 
+
+##########
+# USAGE ##
+##########
+
+ im2a = Image2Ascii(<image name>, <block size>, <character map list>) <!--inits and sets values
+ im2a.setCharMap(<character map list>) <!-- (OPTIONAL) replaces character map is new list
+
+ im2a.convert() <!--converts image to ascii. saves all data to a list. (self.outputList)
+ im2a.write() <!-- writes list to file
