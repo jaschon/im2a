@@ -1,25 +1,44 @@
 
-##########
-#  im2a ##
-##########
+########
+# im2a #
+########
 
  A (really really) simple image-to-ascii converter written in python and PIL.
 
 
-###########
-#  STUFF ##
-###########
+################
+# REQUIREMENTS #
+################
 
 - Python 2.7.1+
 - PIL 1.1.7+
  
 
-##########
-# USAGE ##
-##########
+#########
+# USAGE #
+#########
 
  im2a = Image2Ascii(<image name>, <block size>, <character map list>) <!--inits and sets values
  im2a.setCharMap(<character map list>) <!-- (OPTIONAL) replaces character map is new list
 
  im2a.convert() <!--converts image to ascii. saves all data to a list. (self.outputList)
  im2a.write() <!-- writes list to file
+
+
+
+#####################
+#  DEFAULT CHAR MAP #
+#####################
+
+ This is the default character map that I used for testing:
+   #, $, *, !, ', <space>
+  [dark -----------> light]
+
+ Use the 'setCharMap()' method to set your own.
+   ex. im2a.setCharMap(['a','b','c','d'])
+
+
+
+
+
+

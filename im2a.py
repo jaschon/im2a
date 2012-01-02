@@ -30,7 +30,7 @@ class Image2Ascii:
             self.image = Image.open(self.imageName).convert("L") #open image and convert to b&w
             self.x, self.y = self.image.size #get image size
         except:
-            print "Ooops, I can't Open The Image!"
+            print "Ooops, I can't Open the Image!"
 
     def setCharMap(self, newMap):
         if type(newMap) in (list, tuple):
@@ -90,9 +90,11 @@ class Image2Ascii:
             else:
                 print "Ooops! You Need to Run Process First."
         except:
-            print "Unable To Write File!"
+            print "Unable to Write File!"
 
 if __name__ == "__main__":
+
+    #test if not using in another script
     im = Image2Ascii('test.jpg')
     im.convert()
     im.write()
