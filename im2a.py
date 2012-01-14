@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from PIL import Image, ImageDraw
+from PIL import Image, ImageDraw, ImageFont
 from os import path
 
 __author__ = "Jason Rebuck"
@@ -32,7 +32,7 @@ class Image2Ascii:
             self.image = Image.open(self.imageName).convert("L") #open image and convert to b&w
             self.x, self.y = self.image.size #get image size
         except:
-            print "Ooops, I can't Open the Image!"
+            print "Ooops, I Can't Open the Image!"
 
     def setCharMap(self, newMap):
         if type(newMap) in (list, tuple):
@@ -62,12 +62,12 @@ class Image2Ascii:
             xBreak = False
             self.outputText.append([]) #new row in output
             self.outputColor.append([]) #new row in output
-            if yMax > self.y: #if value is more than height, give height and flag for loop break
+            if yMax >= self.y: #if value is more than height, give height and flag for loop break
                 yMax = self.y
                 yBreak = True
             for x in range(0, self.x, self.blockSize): #loop through width
                 xMax = x + self.blockSize
-                if xMax > self.x: #if value is more than width, give width and flag for loop break
+                if xMax >= self.x: #if value is more than width, give width and flag for loop break
                     xMax = self.x
                     xBreak = True
                 # remember: cropbox is (left, upper, right, bottom)
@@ -84,7 +84,7 @@ class Image2Ascii:
     def output2text(self):
         """Writes Output to Text File"""
         root, ext = path.splitext(self.imageName) #take off extention
-        fileName = root + ".txt" #add '.txt' extention
+        fileName = "{0}_text.txt".format(root) #add '.txt' extention
         try:
             if self.outputText: #make sure there is data in the list
                 f = open(fileName, 'w') #create new file
@@ -93,40 +93,51 @@ class Image2Ascii:
                     f.write('\n') #add an extra line break
                 f.close() #close file when done
             else:
-                print "Ooops! You Need to Run Process First."
+                print "Ooops! You Need to Run Convert First."
         except:
             print "Unable to Write File!"
 
-    def output2blocks(self, blockSize=0):
+
+    def output2image(self, blockSize=10, useText=True):
         """Writes Output to Image File"""
         if not blockSize:
             blockSize = self.blockSize #lets you scale output size
 	root, ext = path.splitext(self.imageName) #get root name
-	fileName = root + ".png" # make file name
+        if useText:
+	    fileName = "{0}_image.png".format(root) # make file name
+        else:
+	    fileName = "{0}_blocks.png".format(root) # make file name
 	try:
           height = len(self.outputColor) * blockSize #get output image size
           width = len(self.outputColor[0]) * blockSize
 	  outImage = Image.new("L", (width, height), 255) #make new image object
           draw = ImageDraw.Draw(outImage) #make draw object
+          if useText:
+              font = ImageFont.load_default() #load default font (for now)
 	except:
 	   print "Unable to Write Image File"
 	   raise
         row = 0 #var to change row in outputColor array
 	for y in range(0, height, blockSize): #loop through height
             x = 0 #x val
-	    for color in self.outputColor[row]: #loop through width
-                draw.rectangle((x, y, x+blockSize, y+blockSize), color )
+	    for col in range(0, len(self.outputColor[row])-1): #loop through width
+                if useText:
+                    draw.text((x, y), self.outputText[row][col], font=font, fill=self.outputColor[row][col] )
+                    #draw text letter in correct color
+                else:
+                    draw.rectangle((x, y, x+blockSize, y+blockSize), self.outputColor[row][col] ) #else draw block
                 x += blockSize
             row += 1
         outImage.save(fileName) #write to output image
 
 
+
 if __name__ == "__main__":
 
-    #test if not using in another script
-    im = Image2Ascii('test.jpg')
+    im = Image2Ascii('test.jpg', 5)
     im.convert()
-    im.output2blocks(50)
     im.output2text()
+    im.output2image()
+    im.output2image(0, False)
 
 
