@@ -5,7 +5,7 @@ from os import path
 
 __author__ = "Jason Rebuck"
 __copyright__ = "2011/2012"
-__version__ = "v.12"
+__version__ = "v.14"
 
 ##########
 # USAGE ##
@@ -16,7 +16,7 @@ __version__ = "v.12"
 #
 # im2a.convert() <!--converts image to ascii. saves all data to a list. (self.outputText)
 # im2a.output2text() <!-- writes list to file
-# im2a.output2image() <!-- writes list of colored blocks back to image 
+# im2a.output2image(<blocksize>, <useText-True|False>) <!-- writes list to image file 
 
 
 class Image2Ascii:

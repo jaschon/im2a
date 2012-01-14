@@ -23,7 +23,7 @@
 
  im2a.convert() <!--converts image to ascii. saves all data to a list. (self.outputList)
  im2a.output2text() <!-- writes list to file
- im2a.output2blocks() <!-- writes list of color blocks to an image. 
+ im2a.output2blocks(<blocksize>,<useText-True|False) <!-- writes list to image file
 
 
 
