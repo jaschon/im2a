@@ -5,7 +5,7 @@ from os import path
 
 __author__ = "Jason Rebuck"
 __copyright__ = "2011/2012"
-__version__ = "v.14"
+__version__ = "v.15"
 
 ##########
 # USAGE ##
@@ -97,7 +97,6 @@ class Image2Ascii:
         except:
             print "Unable to Write File!"
 
-
     def output2image(self, blockSize=10, useText=True):
         """Writes Output to Image File"""
         if not blockSize:
@@ -109,7 +108,7 @@ class Image2Ascii:
 	    fileName = "{0}_blocks.png".format(root) # make file name
 	try:
           height = len(self.outputColor) * blockSize #get output image size
-          width = len(self.outputColor[0]) * blockSize
+          width = (len(self.outputColor[0]) * blockSize)
 	  outImage = Image.new("L", (width, height), 255) #make new image object
           draw = ImageDraw.Draw(outImage) #make draw object
           if useText:
@@ -120,7 +119,7 @@ class Image2Ascii:
         row = 0 #var to change row in outputColor array
 	for y in range(0, height, blockSize): #loop through height
             x = 0 #x val
-	    for col in range(0, len(self.outputColor[row])-1): #loop through width
+	    for col in range(0, len(self.outputColor[row])): #loop through width
                 if useText:
                     draw.text((x, y), self.outputText[row][col], font=font, fill=self.outputColor[row][col] )
                     #draw text letter in correct color
@@ -131,13 +130,12 @@ class Image2Ascii:
         outImage.save(fileName) #write to output image
 
 
-
 if __name__ == "__main__":
 
-    im = Image2Ascii('test.jpg', 5)
-    im.convert()
-    im.output2text()
-    im.output2image()
-    im.output2image(0, False)
+    im = Image2Ascii('note.jpg', 5) #load image
+    im.convert() #collect and process image data
+    im.output2text() #output to text file
+    im.output2image() #output to text image
+    im.output2image(0, False) #output to block image
 
 
