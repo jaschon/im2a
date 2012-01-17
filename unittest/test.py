@@ -54,20 +54,6 @@ class TestIm2A(unittest.TestCase):
         for i in pixels:
             self.assertTrue(i == 0)
 
-    def test_ImageSize(self):
-        """Make Sure Generated Images Are The Right Size"""
-        w, h =  Image.open(self.testFile).size #get test image size
-        tW, tH = Image.open(self.testTextImage).size #get text image size
-        bW, bH = Image.open(self.testBlockImage).size #get block image size
-
-        #make sure Text Image matches Test Image
-        self.assertTrue(tW == w)
-        self.assertTrue(tH == h)
-
-        #make sure Block Image matches Test Image
-        self.assertTrue(bW == w)
-        self.assertTrue(bH == h)
-
 if __name__ == "__main__":
     unittest.main() #Run All Tests
 

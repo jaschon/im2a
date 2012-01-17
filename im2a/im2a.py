@@ -31,8 +31,9 @@ class Image2Ascii:
         try:
             self.image = Image.open(self.imageName).convert("L") #open image and convert to b&w
             self.x, self.y = self.image.size #get image size
-        except:
+        except IOError, e:
             print "Ooops, I Can't Open the Image!"
+            raise
 
     def setCharMap(self, newMap):
         if type(newMap) in (list, tuple):
@@ -96,6 +97,7 @@ class Image2Ascii:
                 print "Ooops! You Need to Run Convert First."
         except:
             print "Unable to Write File!"
+            raise
 
     def output2image(self, blockSize=10, useText=True):
         """Writes Output to Image File"""
@@ -132,7 +134,7 @@ class Image2Ascii:
 
 if __name__ == "__main__":
 
-    im = Image2Ascii('note.jpg', 5) #load image
+    im = Image2Ascii('not.jpg', 5) #load image
     im.convert() #collect and process image data
     im.output2text() #output to text file
     im.output2image() #output to text image
