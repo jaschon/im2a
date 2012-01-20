@@ -5,7 +5,7 @@ from os import path
 
 __author__ = "Jason Rebuck"
 __copyright__ = "2011/2012"
-__version__ = "v.15"
+__version__ = "v.16"
 
 ##########
 # USAGE ##
@@ -14,7 +14,7 @@ __version__ = "v.15"
 # im2a = Image2Ascii(<image name>, <block size>, <character map list>) <!--inits and sets values
 # im2a.setCharMap(<character map list>) <!-- (OPTIONAL) replaces character map is new list
 #
-# im2a.convert() <!--converts image to ascii. saves all data to a list. (self.outputText)
+# im2a.run() <!--converts image to ascii. saves all data to a list. (self.outputText)
 # im2a.output2text() <!-- writes list to file
 # im2a.output2image(<blocksize>, <useText-True|False>) <!-- writes list to image file 
 
@@ -53,7 +53,7 @@ class Image2Ascii:
         except:
             return 255 #if out of range or no pixel values, return white
 
-    def convert(self):
+    def run(self):
         """Loop Through Each Block in Image and Translate Each Value to a List Value"""
         yBreak = False
         self.outputText = [] #clear output list
@@ -82,6 +82,25 @@ class Image2Ascii:
             if yBreak: #break when you reach the max height
                 break
 
+    def addTitle(self, text, spacer="*", color=0):
+        if self.outputText and (len(text) <= len(self.outputText[-1])): #make sure text will fit
+            halfLen = round(len(self.outputText[-1])/2.0) #get half of row length
+            halfText = round(len(text)/2.0) #get half of text length
+            text = str(text).replace(" ", spacer).upper() #format text
+            textRow = self.outputText[-1][0:] #copy a text row
+            colorRow = self.outputColor[-1][0:] #copy a color row
+            counter = 0 # start with 0.
+            for i in range(int(halfLen-halfText), int(halfLen-halfText) + len(text)):
+                textRow[i] = text[counter] #replace text char of that spot in row
+                colorRow[i] = color #replace color of that spot in row
+                counter += 1 #inc counter
+            self.outputText.append(textRow) #add text row
+            self.outputText.append(self.outputText[-2][0:]) #copy extra row for spacing
+            self.outputColor.append(colorRow) #add color row
+            self.outputColor.append(self.outputColor[-2][0:]) #copy extra row for spacing
+        else:
+            print "Oops, Title is Too Long"
+                
     def output2text(self):
         """Writes Output to Text File"""
         root, ext = path.splitext(self.imageName) #take off extention
@@ -99,7 +118,8 @@ class Image2Ascii:
             print "Unable to Write File!"
             raise
 
-    def output2image(self, blockSize=10, useText=True):
+    #multi function to output as a text image or an image of tone blocks
+    def _outputImage(self, blockSize, useText=True):
         """Writes Output to Image File"""
         if not blockSize:
             blockSize = self.blockSize #lets you scale output size
@@ -132,12 +152,22 @@ class Image2Ascii:
         outImage.save(fileName) #write to output image
 
 
+    #easy to use wrapper for outputImage
+    def output2blocks(self, blockSize=10):
+        self._outputImage(blockSize, False)
+
+    #easy to use wrapper for outputImage
+    def output2image(self, blockSize=10):
+        self._outputImage(blockSize)
+
+
 if __name__ == "__main__":
 
-    im = Image2Ascii('not.jpg', 5) #load image
-    im.convert() #collect and process image data
+    im = Image2Ascii('note.jpg', 5) #load image
+    im.run() #collect and process image data
+    im.addTitle("this is a super long title to show what this function can do!")
     im.output2text() #output to text file
     im.output2image() #output to text image
-    im.output2image(0, False) #output to block image
+    im.output2blocks() #output to block image
 
 
