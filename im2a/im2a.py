@@ -14,9 +14,12 @@ __version__ = "v.16"
 # im2a = Image2Ascii(<image name>, <block size>, <character map list>) <!--inits and sets values
 # im2a.setCharMap(<character map list>) <!-- (OPTIONAL) replaces character map is new list
 #
-# im2a.run() <!--converts image to ascii. saves all data to a list. (self.outputText)
-# im2a.output2text() <!-- writes list to file
-# im2a.output2image(<blocksize>, <useText-True|False>) <!-- writes list to image file 
+# im2a.run() <!--scans image and saves all text and color data to lists. (self.outputText and self.outputColor)
+# im2a.addTitle("My Title Here") <!--add a text title to the bottom of the image [EXPERIMENTAL]
+#
+# im2a.output2text() <!-- writes text to file
+# im2a.output2Image(<text spacing>) <!-- writes text and color list to file
+# im2a.output2blocks(<blocksize>) <!-- writes color list as blocks in an image file
 
 
 class Image2Ascii:
