@@ -20,9 +20,9 @@ class TestIm2A(unittest.TestCase):
 
         #run im2a
         self.im = Image2Ascii(self.testFile) #run test file
-        self.im.convert() #collect/convert data
+        self.im.run() #collect/convert data
         self.im.output2image() #make text image
-        self.im.output2image(0, False) #make block image
+        self.im.output2blocks() #make block image
 
         #set up output image names
         self.testTextImage = "{0}_image.png".format(self.testFile.replace(".jpg","")) 
