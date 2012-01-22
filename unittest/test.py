@@ -14,19 +14,20 @@ class TestIm2A(unittest.TestCase):
     def setUp(self):
         """Set Up Test Image And Run im2a"""
         #setup test image
-        self.testFile = "test.jpg"
+        self.testFile = "images/test.jpg"
         im = Image.new( 'L', (200,200), 0)
         im.save(self.testFile)
 
         #run im2a
         self.im = Image2Ascii(self.testFile) #run test file
-        self.im.run() #collect/convert data
-        self.im.output2image() #make text image
-        self.im.output2blocks() #make block image
+        self.im.text() #make text image
+        self.im.blocks() #make block image
+        self.im.ellipse() #make ellipse image
 
         #set up output image names
         self.testTextImage = "{0}_image.png".format(self.testFile.replace(".jpg","")) 
         self.testBlockImage = "{0}_blocks.png".format(self.testFile.replace(".jpg",""))
+        self.testEllipseImage = "{0}_ellipse.png".format(self.testFile.replace(".jpg",""))
 
     def test__OutputList(self):
         """Make Sure Data Has Been Collected"""
@@ -38,6 +39,7 @@ class TestIm2A(unittest.TestCase):
         self.assertTrue(os.path.isfile(self.testFile))
         self.assertTrue(os.path.isfile(self.testTextImage))
         self.assertTrue(os.path.isfile(self.testBlockImage))
+        self.assertTrue(os.path.isfile(self.testEllipseImage))
 
     def test__ColorList(self):
         """Make Sure Color List Is All Black"""
