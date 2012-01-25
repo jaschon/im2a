@@ -94,17 +94,18 @@ class Image2Ascii:
             halfLen = round(len(self.outputText[-1])/2.0) #get half of row length
             halfText = round(len(text)/2.0) #get half of text length
             text = str(text).replace(" ", spacer).upper() #format text
-            textRow = self.outputText[-1][0:] #copy a text row
-            colorRow = self.outputColor[-1][0:] #copy a color row
+            textRow = [ ' ' for i in self.outputText[0] ] #make blank text row
+            extraRow = textRow[0:] #extra copy of text row
+            colorRow = [ 255 for i in self.outputText[0] ] #make a white color row
             counter = 0 # start with 0.
             for i in range(int(halfLen-halfText), int(halfLen-halfText) + len(text)):
                 textRow[i] = text[counter] #replace text char of that spot in row
-                colorRow[i] = color #replace color of that spot in row
+                colorRow[i] = 0 #replace text char of that spot in row
                 counter += 1 #inc counter
             self.titleText.append(textRow) #add text row
-            self.titleText.append(self.outputText[-2][0:]) #copy extra row for spacing
+            self.titleText.append(extraRow) #add text row
             self.titleColor.append(colorRow) #add color row
-            self.titleColor.append(self.outputColor[-2][0:]) #copy extra row for spacing
+            self.titleColor.append(colorRow) #add color row
         else:
             print "Oops, Title is Too Long"
 
@@ -197,7 +198,7 @@ class OutputImageText(OutputImageGeneric):
     def writeLn(self, x, y, row, col):
         try:
             self.draw.text((x, y), self.outputText[row][col], font=self.font, fill=self.outputColor[row][col] ) #write colored text
-        except:
+        except OSError:
             print "Unable To Write Image Text Line! ({0},{1})".format(x,y)
 
 class OutputImageEllipse(OutputImageGeneric):
