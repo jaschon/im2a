@@ -21,10 +21,8 @@
  im2a = Image2Ascii(<image name>, <block size>, <character map list>) <!--inits and sets values
  im2a.setMap(<character map list>) <!-- (OPTIONAL) replaces character map
 
- im2a.addTitle("My Title Here") <!--add a text title to the bottom of the image [EXPERIMENTAL]
-
  im2a.ascii() <!-- writes text to file
- im2a.text(<text spacing>) <!-- writes text and color list to file
+ im2a.text(<ttf font>, <font size>) <!-- writes text and color list to file
  im2a.blocks(<blocksize>) <!-- writes color list as blocks in an image file
  im2a.ellipse(<blocksize>) <!-- writes color list as ellipses in an image file
 

@@ -5,7 +5,7 @@ from os import path
 
 __author__ = "Jason Rebuck"
 __copyright__ = "2011/2012"
-__version__ = "v.18"
+__version__ = "v.20"
 
 ##########
 # USAGE ##
@@ -14,10 +14,8 @@ __version__ = "v.18"
 # im2a = Image2Ascii(<image name>, <block size>, <character map list>) <!--inits and sets values
 # im2a.setMap(<character map list>) <!-- (OPTIONAL) replaces character map
 #
-# im2a.addTitle("My Title Here") <!--add a text title to the bottom of the image [EXPERIMENTAL]
-#
 # im2a.ascii() <!-- writes text to file
-# im2a.text(<text spacing>) <!-- writes text and color list to file
+# im2a.text(<ttf font name>, <font size>) <!-- writes text and color list to file
 # im2a.blocks(<blocksize>) <!-- writes color list as blocks in an image file
 # im2a.ellipse(<blocksize>) <!-- writes color list as ellipses in an image file
 
@@ -29,8 +27,6 @@ class Image2Ascii:
         self.charMap = charMap #your color mapping. [dark -> light]
         self.outputText = [] #create empty output list
         self.outputColor = [] #create empty output list
-        self.titleText = []
-        self.titleColor = []
         self.hasRun = False #flag to tell if run function has been called
         try:
             self.image = Image.open(self.imageName).convert("L") #open image and convert to b&w
@@ -88,27 +84,6 @@ class Image2Ascii:
         if self.outputText and self.outputColor: #mark flag as run
             self.hasRun = True
 
-    def addTitle(self, text, spacer="*", color=0):
-        self.checkRun()
-        if self.outputText and (len(text) <= len(self.outputText[-1])): #make sure text will fit
-            halfLen = round(len(self.outputText[-1])/2.0) #get half of row length
-            halfText = round(len(text)/2.0) #get half of text length
-            text = str(text).replace(" ", spacer).upper() #format text
-            textRow = [ ' ' for i in self.outputText[0] ] #make blank text row
-            extraRow = textRow[0:] #extra copy of text row
-            colorRow = [ 255 for i in self.outputText[0] ] #make a white color row
-            counter = 0 # start with 0.
-            for i in range(int(halfLen-halfText), int(halfLen-halfText) + len(text)):
-                textRow[i] = text[counter] #replace text char of that spot in row
-                colorRow[i] = 0 #replace text char of that spot in row
-                counter += 1 #inc counter
-            self.titleText.append(textRow) #add text row
-            self.titleText.append(extraRow) #add text row
-            self.titleColor.append(colorRow) #add color row
-            self.titleColor.append(colorRow) #add color row
-        else:
-            print "Oops, Title is Too Long"
-
     def checkRun(self):
         if not self.hasRun:
             self.run()
@@ -120,10 +95,10 @@ class Image2Ascii:
         im.loop()
         im.save()
 
-    def text(self, space=10):
+    def text(self, font='default', size=11):
         """Output to Image of Colored Text"""
         self.checkRun()
-        im = OutputImageText(self, space)
+        im = OutputImageText(self, font, size)
         im.loop()
         im.save()
 
@@ -157,7 +132,6 @@ class OutputImageGeneric:
     def setupImage(self):
         self.outImage = Image.new("L", (self.width, self.height), 255) #make output image
         self.draw = ImageDraw.Draw(self.outImage) #make draw object
-        self.font = ImageFont.load_default() #setup font object
 
     def setSize(self):
         self.height= len(self.outputColor) * self.blockSize #cal height
@@ -181,25 +155,50 @@ class OutputImageGeneric:
             self.draw.rectangle((x, y, x+self.blockSize, y+self.blockSize), self.outputColor[row][col] ) #draw rectangle
         except:
             print "Unable To Write Block Image Line! ({0},{1})".format(x,y)
+            raise
 
     def save(self):
         self.outImage.save(self.fileName) #save to file
 
 class OutputImageText(OutputImageGeneric):
     """Writes Output as Colored Text"""
+
+    def __init__(self, imObject, font='default', size=11):
+        self.setupLists(imObject) #save lists
+        self.setFileName(imObject.imageName) #set filename
+        self.blockSize = imObject.blockSize #set blocksize
+        self.setFont(font, size)
+        self.setSize() #set height and width
+        self.setupImage() #setup output file and other objects
+
     def setFileName(self,fileName):
 	root, ext = path.splitext(fileName) #get root name
 	self.fileName = "{0}_text.png".format(root) # make file name
 
     def setupLists(self, imObject):
-        self.outputColor = imObject.outputColor + imObject.titleColor #set object colorlist
-        self.outputText = imObject.outputText + imObject.titleText #set object textlist
+        self.outputColor = imObject.outputColor #set object colorlist
+        self.outputText = imObject.outputText #set object textlist
+        self.font = ImageFont.load_default() #set up default font
+
+    def setFont(self, font, size):
+        if not font in ('default', '', ' '): #if font is not missing or font is not set to default
+            try:
+                self.font = ImageFont.truetype(font, size) #load ttf object
+                fontSize= self.font.getsize(self.outputText[0][0]) #make height of text needed
+                self.blockSize = fontSize[1] #set font height as blockSize
+            except:
+                print "Error. Something Wrong With Setting Font!"
+                raise
+        else:
+            self.blockSize = 11 #else load PIL default with a space of 11
+            self.font = ImageFont.load_default()
 
     def writeLn(self, x, y, row, col):
         try:
             self.draw.text((x, y), self.outputText[row][col], font=self.font, fill=self.outputColor[row][col] ) #write colored text
         except OSError:
             print "Unable To Write Image Text Line! ({0},{1})".format(x,y)
+            raise
 
 class OutputImageEllipse(OutputImageGeneric):
     """Writes Output as Colored Ellipses"""
@@ -212,16 +211,25 @@ class OutputImageEllipse(OutputImageGeneric):
             self.draw.ellipse((x, y, x+self.blockSize, y+self.blockSize), self.outputColor[row][col] ) #write ellipse
         except:
             print "Unable To Write Ellipse Line! ({0},{1})".format(x,y)
+            raise
 
 class OutputAsciiText(OutputImageGeneric):
     """Writes Output to Ascii Text File"""
+
+    def __init__(self, imObject, blockSize=''):
+        self.setupLists(imObject) #save lists
+        self.setFileName(imObject.imageName) #set filename
+        self.blockSize = blockSize or imObject.blockSize #set blocksize
+        self.setSize() #set height and width
+        self.setupImage() #setup output file and other objects
+
     def setFileName(self, fileName):
         root, ext = path.splitext(fileName) #take off extention
         self.fileName = "{0}_ascii.txt".format(root) #add '.txt' extention
 
     def setupLists(self, imObject):
-        self.outputColor = imObject.outputColor + imObject.titleColor #set object colorlist
-        self.outputText = imObject.outputText + imObject.titleText #set object textlist
+        self.outputColor = imObject.outputColor #set object colorlist
+        self.outputText = imObject.outputText #set object textlist
 
     def setupImage(self):
         pass #skip setup function [other objects not needed]
@@ -243,11 +251,9 @@ class OutputAsciiText(OutputImageGeneric):
 
 if __name__ == "__main__":
     im = Image2Ascii('examples/note.jpg', 5) #load image
-    #im.setMap(range(10)) #sets custom character map
-    im.addTitle("Image Test") #adds title to ascii and text image
     im.ascii() #output to text file
     im.blocks() #output to block image
-    im.text()
+    im.text('default', 11) #output to an image of colored text
     im.ellipse()
 
 
