@@ -195,7 +195,7 @@ class OutputImageText(OutputImageGeneric):
 
     def writeLn(self, x, y, row, col):
         try:
-            self.draw.text((x, y), self.outputText[row][col], font=self.font, fill=self.outputColor[row][col] ) #write colored text
+            self.draw.text((x+3, y), self.outputText[row][col], font=self.font, fill=self.outputColor[row][col] ) #write colored text
         except OSError:
             print "Unable To Write Image Text Line! ({0},{1})".format(x,y)
             raise
@@ -253,7 +253,7 @@ if __name__ == "__main__":
     im = Image2Ascii('examples/note.jpg', 5) #load image
     im.ascii() #output to text file
     im.blocks() #output to block image
-    im.text('default', 11) #output to an image of colored text
+    im.text() #output to an image of colored text
     im.ellipse()
 
 
