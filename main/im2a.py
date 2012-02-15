@@ -5,7 +5,7 @@ from os import path
 
 __author__ = "Jason Rebuck"
 __copyright__ = "2011/2012"
-__version__ = "v.20"
+__version__ = "v.21"
 
 ##########
 # USAGE ##
@@ -15,7 +15,7 @@ __version__ = "v.20"
 # im2a.setMap(<character map list>) <!-- (OPTIONAL) replaces character map
 #
 # im2a.ascii() <!-- writes text to file
-# im2a.text(<ttf font name>, <font size>) <!-- writes text and color list to file
+# im2a.text(<ttf font filename>, <font size>) <!-- writes text and color list to file
 # im2a.blocks(<blocksize>) <!-- writes color list as blocks in an image file
 # im2a.ellipse(<blocksize>) <!-- writes color list as ellipses in an image file
 
@@ -37,12 +37,13 @@ class Image2Ascii:
 
     def setMap(self, newMap):
         if type(newMap) in (list, tuple):
-            self.charMap = newMap
+            self.charMap = list(newMap) #replace charMap with new values
+            self.hasRun = False #reset hasRun flag
 
     def _mapChar(self, num):
         """Map Color Value to List Value""" 
         for c in range(1, len(self.charMap)+1):
-            if num <= round(c*(256.0/len(self.charMap))):
+            if num <= round(c*(255.0/len(self.charMap))):
                 return str(self.charMap[c-1]) #return char (make sure it is a string!)
         return str(self.charMap[0]) #if nothing found, give the first value
 
