@@ -18,6 +18,7 @@ __version__ = "v.23"
 # im2a.text(<ttf font filename>, <font size>) <!-- writes text and color list to file
 # im2a.blocks(<blocksize>) <!-- writes color list as blocks in an image file
 # im2a.ellipse(<blocksize>) <!-- writes color list as ellipses in an image file
+# im2a.dot(<blocksize>) <!-- writes color list as different sized dots in an image file. 
 
 
 class Image2Ascii:
