@@ -280,5 +280,5 @@ if __name__ == "__main__":
     im.blocks() #output to block image
     im.text() #output to an image of colored text
     im.ellipse()
-
+    im.dot()
 
