@@ -5,7 +5,7 @@ from os import path
 
 __author__ = "Jason Rebuck"
 __copyright__ = "2011/2012"
-__version__ = "v.21"
+__version__ = "v.23"
 
 ##########
 # USAGE ##
@@ -18,6 +18,7 @@ __version__ = "v.21"
 # im2a.text(<ttf font filename>, <font size>) <!-- writes text and color list to file
 # im2a.blocks(<blocksize>) <!-- writes color list as blocks in an image file
 # im2a.ellipse(<blocksize>) <!-- writes color list as ellipses in an image file
+
 
 class Image2Ascii:
     """Translate Image To ASCII Characters"""
@@ -117,6 +118,13 @@ class Image2Ascii:
         im.loop()
         im.save()
 
+    def dot(self, blockSize=10):
+        """Output to Image of Different Sized Ellipses"""
+        self.checkRun()
+        im = OutputImageDot(self, blockSize)
+        im.loop()
+        im.save()
+
 class OutputImageGeneric:
     """Output To Blocks of Color"""
     def __init__(self, imObject, blockSize=''):
@@ -212,6 +220,22 @@ class OutputImageEllipse(OutputImageGeneric):
             self.draw.ellipse((x, y, x+self.blockSize, y+self.blockSize), self.outputColor[row][col] ) #write ellipse
         except:
             print "Unable To Write Ellipse Line! ({0},{1})".format(x,y)
+            raise
+
+
+class OutputImageDot(OutputImageGeneric):
+    """Writes Output as Colored Ellipses"""
+
+    def setFileName(self,fileName):
+	root, ext = path.splitext(fileName) #get root name
+	self.fileName = "{0}_dot.png".format(root) # make file name
+
+    def writeLn(self, x, y, row, col):
+        try:
+	    amount = self.blockSize - round((self.outputColor[row][col]/255.0) * self.blockSize )
+            self.draw.ellipse((x - amount, y - amount, x + amount, y + amount), 0 ) #write ellipse
+        except:
+            print "Unable To Write Dot Line! ({0},{1})".format(x,y)
             raise
 
 class OutputAsciiText(OutputImageGeneric):
