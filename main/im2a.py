@@ -4,8 +4,8 @@ from PIL import Image, ImageDraw, ImageFont
 from os import path
 
 __author__ = "Jason Rebuck"
-__copyright__ = "2011/2012"
-__version__ = "v.23"
+__copyright__ = "2011/2012/2013"
+__version__ = "v.23.1"
 
 ##########
 # USAGE ##
@@ -23,6 +23,7 @@ __version__ = "v.23"
 
 class Image2Ascii:
     """Translate Image To ASCII Characters"""
+
     def __init__(self, image, blockSize=10, charMap = ('#',"$","*","!","'"," ")):
         self.imageName = image #save name of image
         self.blockSize = blockSize #size of squares
@@ -128,6 +129,7 @@ class Image2Ascii:
 
 class OutputImageGeneric:
     """Output To Blocks of Color"""
+
     def __init__(self, imObject, blockSize=''):
         self.setupLists(imObject) #save lists
         self.setFileName(imObject.imageName) #set filename
@@ -206,12 +208,13 @@ class OutputImageText(OutputImageGeneric):
     def writeLn(self, x, y, row, col):
         try:
             self.draw.text((x+3, y), self.outputText[row][col], font=self.font, fill=self.outputColor[row][col] ) #write colored text
-        except OSError:
+        except:
             print "Unable To Write Image Text Line! ({0},{1})".format(x,y)
             raise
 
 class OutputImageEllipse(OutputImageGeneric):
     """Writes Output as Colored Ellipses"""
+
     def setFileName(self,fileName):
 	root, ext = path.splitext(fileName) #get root name
 	self.fileName = "{0}_ellipse.png".format(root) # make file name
@@ -222,7 +225,6 @@ class OutputImageEllipse(OutputImageGeneric):
         except:
             print "Unable To Write Ellipse Line! ({0},{1})".format(x,y)
             raise
-
 
 class OutputImageDot(OutputImageGeneric):
     """Writes Output as Colored Ellipses"""
