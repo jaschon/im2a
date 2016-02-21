@@ -7,7 +7,7 @@ from im2a import *
 import unittest, os
 
 __author__ = "Jason Rebuck"
-__copyright__ = "2012"
+__copyright__ = "2012-2016"
 
 class TestIm2A_Output(unittest.TestCase):
 
