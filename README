@@ -3,7 +3,7 @@
 # im2a #
 ########
 
- A (really really) simple image-to-ascii converter written in python and PIL.
+ A simple image-to-ascii converter written in python and PIL.
 
 
 ################
