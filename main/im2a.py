@@ -4,7 +4,7 @@ from PIL import Image, ImageDraw, ImageFont
 from os import path
 
 __author__ = "Jason Rebuck"
-__copyright__ = "2011/2012/2013"
+__copyright__ = "2011/2012/2013-2016"
 __version__ = "v.23.1"
 
 ##########
