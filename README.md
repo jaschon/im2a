@@ -1,9 +1,9 @@
 
 
-#im2a#
+# im2a #
 
 
- * simple image-to-ascii converter written in python and PIL.*
+ *simple image-to-ascii converter written in python and PIL.*
 
 
 
@@ -32,10 +32,14 @@
 
 ##  DEFAULT CHAR MAP #
 
- This is the default character map that I used for testing:
-   #, $, *, !, ', <space>
-  [dark -----------> light]
+ #### This is the default character map that I used for testing: 
+ 
+ > #, $, *, !, ', <space>
+ >[dark -----------> light]
 
- Use the 'setCharMap()' method to set your own.
-   ex. im2a.setCharMap(['a','b','c','d'])
+ #### Use the 'setCharMap()' method to set your own.
+ 
+ ```
+ im2a.setCharMap(['a','b','c','d'])
+ ```
 
