@@ -3,7 +3,7 @@
 # im2a #
 
 
- *simple image-to-ascii converter written in python and PIL.*
+ *This started out as a simple image-to-ascii converter written in python...*
 
 
 
@@ -35,6 +35,7 @@
  #### This is the default character map that I used for testing: 
  
  > #, $, *, !, ', <space>
+ 
  >[dark -----------> light]
 
  #### Use the 'setCharMap()' method to set your own.
